@@ -15,7 +15,7 @@ function signToken(userId) {
   
 async function register(userData) {
     const user = await userRepo.create(userData);
-    const token = signToken(user._id.toString());
+    const token = signToken(user._id);
     return { user, token };
 }
   
@@ -25,7 +25,7 @@ async function login({ email, password }) {
     if (!ok) {
         throw new Error('Invalid email or password');
     }
-    const token = signToken(user._id.toString());
+    const token = signToken(user._id);
     return { user, token };
 }
 

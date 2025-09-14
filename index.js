@@ -2,13 +2,14 @@ require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
-
+const { redisClient } = require('./utils/redisClient');
 const { connectDB } = require('./utils/db');
 const authRoutes = require('./routes/authRoutes');
-
+const passengerRoutes = require('./routes/passengerRoutes');
+const driverRoutes = require('./routes/driverRoutes');
 const app = express();
 const server = http.createServer(app);
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 // ---- middleware ----
 app.use(cors());
@@ -16,6 +17,8 @@ app.use(express.json());
 
 // ---- routes ----
 app.use('/api/auth', authRoutes);
+app.use('/api/passenger', passengerRoutes);
+app.use('/api/driver', driverRoutes);
 
 
 app.use((req, res) => res.status(404).json({ error: 'Not found' }));
