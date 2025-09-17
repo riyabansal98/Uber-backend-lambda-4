@@ -7,7 +7,7 @@ const updateLocation = async (driverId, {latitude, longitude}) => {
     const lon = parseFloat(longitude);
 
     try {
-        const res = await locationService.addDriverLocation(driverId, lat, lon);
+        const res = await locationService.addDriverLocation(driverId, lon, lat);
         
         await userRepository.updateLocation(driverId, {
             type: 'Point',
