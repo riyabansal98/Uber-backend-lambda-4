@@ -1,4 +1,4 @@
-const express = require('expresss');
+const express = require('express');
 const authMiddleware = require('../middlewares/authMiddleware');
 const {updateLocation} = require('../controllers/driverController');
 const router = express.Router();
@@ -7,7 +7,7 @@ const router = express.Router();
 //router.get('/bookings', getDriverBookings);
 
 //Route to get updated driver location
-router.post('/location', updateLocation);
+router.post('/location', authMiddleware, updateLocation);
 
 module.exports = router;
 

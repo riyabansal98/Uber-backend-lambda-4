@@ -10,4 +10,8 @@ async function findByEmail(email) {
   return User.findOne({ email });
 }
 
-module.exports = { create, findByEmail };
+const updateLocation = async (driverId, location) => {
+  return User.findByIdAndUpdate(driverId, { location }, { new: true });
+};
+
+module.exports = { create, findByEmail, updateLocation };

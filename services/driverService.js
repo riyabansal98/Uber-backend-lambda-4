@@ -1,4 +1,5 @@
 const locationService = require('../services/locationService');
+const userRepository = require('../repositories/userRepository');
 
 const updateLocation = async (driverId, {latitude, longitude}) => {
 
@@ -7,12 +8,16 @@ const updateLocation = async (driverId, {latitude, longitude}) => {
 
     try {
         const res = await locationService.addDriverLocation(driverId, lat, lon);
-        //update the driver location to redis
+        
+        await userRepository.updateLocation(driverId, {
+            type: 'Point',
+            coordinates: [lon, lat]
+        });
+
     }catch {
         console.log(error);
     }
 
-    // update driver location to mongoDB
     
 
 }
