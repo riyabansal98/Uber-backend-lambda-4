@@ -1,16 +1,15 @@
 const bookingService = require('../services/bookingService');
 const axios = require('axios');
-
+const locationService = require('../services/locationService');
 const createBooking = async (req, res) => {
 
     try{
         const  {source, destination} = req.body;
-        //create a booking > persist a booking object in mongo db
         const booking = await bookingService.createBooking({passengerId: req.user._id, source, destination});    
         // find nearby drivers >> using redis DB
         // notify the nearby drivers
-        const nearbyDrivers = await bookingService.findNearbyDrivers(source);
-        
+        const nearbyDrivers = await bookingService.findNearbyDrivers(source);        
+        console.log("near", nearbyDrivers);
         const driverIds = nearbyDrivers.map(driver => driver[0]);
                         
         const rideInfo = {
@@ -28,7 +27,7 @@ const createBooking = async (req, res) => {
                 rideInfo,
                 driverIds
             });
-            
+            await locationService.storeNotifiedDrivers(booking._id, driverIds);
             console.log('Notification sent successfully:', notificationResponse.data);
             
         } catch (notificationError) {

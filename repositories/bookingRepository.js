@@ -7,4 +7,12 @@ const createBooking = async (bookingData) => {
     return booking;
 }
 
-module.exports = {createBooking};
+const updateBookingStatus = async (bookingId, driverId, status) => {
+    return Booking.findOneAndUpdate(
+      { _id: bookingId, status: 'pending' },
+      { driver: driverId, status },
+      { new: true }
+    );
+};
+
+module.exports = {createBooking, updateBookingStatus};

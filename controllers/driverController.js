@@ -1,4 +1,7 @@
 const driverService = require('../services/driverService');
+const locationService = require('../services/locationService');
+const bookingService = require('../services/bookingService');
+const axios = require('axios');
 
 const updateLocation = async(req, res) => {
 
@@ -17,5 +20,31 @@ const updateLocation = async(req, res) => {
     }
 }
 
+const confirmBooking = async(req, res) => {
+    
+    const { bookingId } = req.body;
 
-module.exports = {updateLocation};
+    //update the booking status
+    const booking = await bookingService.assignDriver(bookingId, req.user._id);
+    console.log(booking, bookingId);
+    //get the list of drivers who were notified about this booking. 
+    const notifiedDriverIds = await locationService.getNotifiedDrivers(bookingId);
+    console.log("notified driver Ids", notifiedDriverIds);
+    try {                                             
+        const notificationResponse = await 
+        axios.post('http://localhost:3001/api/remove-ride-notification', {
+            rideId: bookingId,
+            driverIds: notifiedDriverIds
+        });
+           
+        console.log('Successfully removed ride notifications:', notificationResponse.data);
+
+    } catch (notificationError) {
+        console.error('Failed to notify drivers:', notificationError.message);
+    }
+    res.status(201)
+    .send({data:booking, success: true, error: null, message: "successfully confirmed booking"});
+
+}
+
+module.exports = {updateLocation, confirmBooking};

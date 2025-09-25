@@ -37,4 +37,12 @@ const findNearbyDrivers = async (location, radius = 5) => {
     return nearbyDrivers;
   };
 
-module.exports = {createBooking, findNearbyDrivers};
+const assignDriver = async (bookingId, driverId) => {
+    console.log(bookingId)
+    const booking = await bookingRepository.updateBookingStatus(bookingId, driverId, 'confirmed');
+    if (!booking) throw new Error('Booking already confirmed or does not exist');
+    return booking;
+  };
+
+
+module.exports = {createBooking, findNearbyDrivers, assignDriver};
